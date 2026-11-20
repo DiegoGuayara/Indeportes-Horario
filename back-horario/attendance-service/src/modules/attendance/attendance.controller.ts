@@ -3,7 +3,8 @@ import { AttendanceServiceError, registerAttendanceEvent } from "./attendance.se
 
 export const createAttendanceEvent: RequestHandler = async (req, res) => {
   try {
-    const event = await registerAttendanceEvent(req.body);
+    const auth = res.locals.auth as { contractorId: string };
+    const event = await registerAttendanceEvent(req.body, auth.contractorId);
     res.status(201).json({ data: event });
   } catch (error) {
     if (error instanceof AttendanceServiceError) {

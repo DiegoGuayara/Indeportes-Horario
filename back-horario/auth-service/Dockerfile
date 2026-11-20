@@ -3,7 +3,10 @@ FROM node:22-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
-COPY tsconfig.json App.ts ./
+COPY prisma ./prisma
+COPY prisma.config.ts tsconfig.json App.ts ./
+COPY src ./src
+RUN DATABASE_URL="mysql://placeholder:placeholder@127.0.0.1:3306/indeportes_auth" npx prisma generate
 RUN npm run build
 
 FROM node:22-alpine AS runtime

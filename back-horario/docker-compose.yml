@@ -50,6 +50,7 @@ services:
     environment:
       NODE_ENV: development
       PORT: 10112
+      JWT_SECRET: "${JWT_SECRET:?Define JWT_SECRET en back-horario/.env}"
       DATABASE_URL: "${ATTENDANCE_DATABASE_URL:-mysql://root:${MYSQL_ROOT_PASSWORD:-dev_root_password}@mysql:3306/indeportes_attendance}"
     depends_on:
       mysql:
@@ -67,6 +68,7 @@ services:
     environment:
       NODE_ENV: development
       PORT: 10113
+      JWT_SECRET: "${JWT_SECRET:?Define JWT_SECRET en back-horario/.env}"
       DATABASE_URL: "${AUTH_DATABASE_URL:-mysql://root:${MYSQL_ROOT_PASSWORD:-dev_root_password}@mysql:3306/indeportes_auth}"
     depends_on:
       mysql:

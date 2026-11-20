@@ -22,7 +22,6 @@ export class AttendanceServiceError extends Error {
 }
 
 interface CreateAttendanceInput {
-  contractorId: string;
   eventType: AttendanceEventTypeValue;
   method: AttendanceMethodValue;
   siteId: string | null;
@@ -53,12 +52,14 @@ const validateInput = (input: unknown): CreateAttendanceInput => {
     );
   }
 
-  const { contractorId, eventType, method, siteId, latitude, longitude } =
-    input;
-
-  if (typeof contractorId !== "string" || contractorId.trim().length === 0) {
-    throw new AttendanceServiceError(400, "contractorId es obligatorio.");
+  if ("contractorId" in input) {
+    throw new AttendanceServiceError(
+      400,
+      "No envíes contractorId; la identidad se obtiene del token.",
+    );
   }
+
+  const { eventType, method, siteId, latitude, longitude } = input;
 
   if (!isAttendanceEventType(eventType)) {
     throw new AttendanceServiceError(400, "eventType debe ser ENTRY o EXIT.");
@@ -101,7 +102,6 @@ const validateInput = (input: unknown): CreateAttendanceInput => {
   }
 
   return {
-    contractorId: contractorId.trim(),
     eventType,
     method,
     siteId: typeof siteId === "string" && siteId.trim() ? siteId.trim() : null,
@@ -110,9 +110,12 @@ const validateInput = (input: unknown): CreateAttendanceInput => {
   };
 };
 
-export const registerAttendanceEvent = async (input: unknown) => {
+export const registerAttendanceEvent = async (
+  input: unknown,
+  contractorId: string,
+) => {
   const data = validateInput(input);
-  const lastEvent = await findLatestAttendanceEvent(data.contractorId);
+  const lastEvent = await findLatestAttendanceEvent(contractorId);
 
   const expectedEventType =
     lastEvent?.eventType === AttendanceEventType.ENTRY
@@ -128,5 +131,5 @@ export const registerAttendanceEvent = async (input: unknown) => {
     );
   }
 
-  return createAttendanceEventRecord(data);
+  return createAttendanceEventRecord({ ...data, contractorId });
 };
