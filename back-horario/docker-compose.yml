@@ -1,0 +1,118 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: indeportes-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-dev_root_password}
+      TZ: America/Bogota
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - indeportes-network
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping --host=127.0.0.1 --user=root --password=\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    container_name: indeportes-api-gateway
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 10111
+      ATTENDANCE_SERVICE_URL: http://attendance-service:10112
+      AUTH_SERVICE_URL: http://auth-service:10113
+      CONTRACTORS_SERVICE_URL: http://contractors-services:10114
+      SCHEDULES_SERVICE_URL: http://schedules-services:10115
+    ports:
+      - "8080:10111"
+    depends_on:
+      - attendance-service
+      - auth-service
+      - contractors-services
+      - schedules-services
+    networks:
+      - indeportes-network
+
+  attendance-service:
+    build:
+      context: ./attendance-service
+    container_name: indeportes-attendance-service
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 10112
+      DATABASE_URL: "${ATTENDANCE_DATABASE_URL:-mysql://root:${MYSQL_ROOT_PASSWORD:-dev_root_password}@mysql:3306/indeportes_attendance}"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    expose:
+      - "10112"
+    networks:
+      - indeportes-network
+
+  auth-service:
+    build:
+      context: ./auth-service
+    container_name: indeportes-auth-service
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 10113
+      DATABASE_URL: "${AUTH_DATABASE_URL:-mysql://root:${MYSQL_ROOT_PASSWORD:-dev_root_password}@mysql:3306/indeportes_auth}"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    expose:
+      - "10113"
+    networks:
+      - indeportes-network
+
+  contractors-services:
+    build:
+      context: ./contractors-services
+    container_name: indeportes-contractors-service
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 10114
+      DATABASE_URL: "${CONTRACTORS_DATABASE_URL:-mysql://root:${MYSQL_ROOT_PASSWORD:-dev_root_password}@mysql:3306/indeportes_contractors}"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    expose:
+      - "10114"
+    networks:
+      - indeportes-network
+
+  schedules-services:
+    build:
+      context: ./schedules-services
+    container_name: indeportes-schedules-service
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 10115
+      DATABASE_URL: "${SCHEDULES_DATABASE_URL:-mysql://root:${MYSQL_ROOT_PASSWORD:-dev_root_password}@mysql:3306/indeportes_schedules}"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    expose:
+      - "10115"
+    networks:
+      - indeportes-network
+
+networks:
+  indeportes-network:
+    driver: bridge
+
+volumes:
+  mysql_data:

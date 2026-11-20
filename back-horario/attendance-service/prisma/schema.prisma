@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum AttendanceEventType {
+  ENTRY
+  EXIT
+}
+
+enum AttendanceMethod {
+  QR
+  GPS
+  MANUAL
+}
+
+model AttendanceEvent {
+  id           String               @id @default(uuid()) @db.Char(36)
+  contractorId String               @db.VarChar(64)
+  eventType    AttendanceEventType
+  occurredAt   DateTime             @default(now()) @db.DateTime(3)
+  method       AttendanceMethod
+  siteId       String?              @db.VarChar(64)
+  latitude     Decimal?             @db.Decimal(10, 7)
+  longitude    Decimal?             @db.Decimal(10, 7)
+  createdAt    DateTime             @default(now()) @db.DateTime(3)
+
+  @@index([contractorId, occurredAt])
+  @@index([siteId, occurredAt])
+}
