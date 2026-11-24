@@ -103,6 +103,7 @@ services:
     environment:
       NODE_ENV: development
       PORT: 10115
+      JWT_SECRET: "${JWT_SECRET:?Define JWT_SECRET en back-horario/.env}"
       DATABASE_URL: "${SCHEDULES_DATABASE_URL:-mysql://root:${MYSQL_ROOT_PASSWORD:-dev_root_password}@mysql:3306/indeportes_schedules}"
     depends_on:
       mysql:
