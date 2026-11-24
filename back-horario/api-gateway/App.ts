@@ -3,6 +3,35 @@ import { createProxyMiddleware } from "http-proxy-middleware";
 
 const app = express();
 const PORT = Number(process.env.PORT ?? 10111);
+const allowedOrigins = new Set(
+  (process.env.ALLOWED_ORIGINS ?? "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
+);
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  if (origin && allowedOrigins.has(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Authorization,Content-Type");
+    res.setHeader("Access-Control-Max-Age", "600");
+  }
+
+  if (req.method === "OPTIONS") {
+    if (origin && !allowedOrigins.has(origin)) {
+      res.status(403).json({ message: "Origen no permitido." });
+      return;
+    }
+    res.sendStatus(204);
+    return;
+  }
+
+  next();
+});
 
 const serviceProxies = [
   {

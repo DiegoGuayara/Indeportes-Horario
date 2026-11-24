@@ -23,9 +23,7 @@
     "express": "^5.3.0",
     "jose": "^6.2.18",
     "mariadb": "^3.5.5",
+    "prisma": "^7.10.1",
     "typescript": "^7.0.2"
-  },
-  "devDependencies": {
-    "prisma": "^7.10.1"
   }
 }
