@@ -5,7 +5,7 @@ COPY package*.json ./
 RUN npm ci
 COPY tsconfig.json App.ts prisma.config.ts ./
 COPY prisma ./prisma
-RUN npm run db:generate
+RUN DATABASE_URL="mysql://local:local@localhost:3306/indeportes_contractors" npm run db:generate
 COPY src ./src
 RUN npm run build
 
