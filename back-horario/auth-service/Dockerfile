@@ -6,6 +6,7 @@ RUN npm ci
 COPY prisma ./prisma
 COPY prisma.config.ts tsconfig.json App.ts ./
 COPY src ./src
+COPY scripts ./scripts
 RUN DATABASE_URL="mysql://placeholder:placeholder@127.0.0.1:3306/indeportes_auth" npx prisma generate
 RUN npm run build
 
@@ -17,5 +18,6 @@ RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/prisma.config.ts ./prisma.config.ts
+COPY --from=build /app/scripts ./scripts
 EXPOSE 10113
 CMD ["npm", "start"]
