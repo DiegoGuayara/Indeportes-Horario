@@ -61,7 +61,7 @@ Cuando Vercel asigne el dominio final, reemplaza `TU-PROYECTO` por el dominio ex
 
 ## 4. Ejecutar migraciones remotas
 
-En cada uno de los servicios `auth`, `attendance` y `schedules`, configura el **Pre-deploy Command** en Railway como:
+En cada uno de los servicios `auth`, `attendance`, `contractors` y `schedules`, configura el **Pre-deploy Command** en Railway como:
 
 ```text
 npm run db:deploy

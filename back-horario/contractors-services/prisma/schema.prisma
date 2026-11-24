@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Contractor {
+  contractorId  String   @id @db.VarChar(64)
+  firstName     String   @db.VarChar(100)
+  lastName      String   @db.VarChar(100)
+  documentNumber String  @unique @db.VarChar(40)
+  email         String?  @db.VarChar(191)
+  phone         String?  @db.VarChar(30)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now()) @db.DateTime(3)
+  updatedAt     DateTime @updatedAt @db.DateTime(3)
+
+  @@index([lastName, firstName])
+  @@index([isActive])
+}
