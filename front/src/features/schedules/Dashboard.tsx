@@ -3,6 +3,7 @@ import { Brand } from '../../components/Brand'
 import { Icon } from '../../components/Icon'
 import { MetricCard } from '../../components/MetricCard'
 import { apiRequest, type ApiError } from '../../lib/api'
+import { AttendanceCheckIn } from '../attendance/AttendanceCheckIn'
 import type { Session } from '../../types/auth'
 import type { Schedule, ScheduleResponse } from '../../types/schedule'
 import { dayNames } from './scheduleConstants'
@@ -82,6 +83,8 @@ export function Dashboard({ session, onLogout }: { session: Session; onLogout: (
           <MetricCard icon="check" label="Horarios activos" value={loading ? '—' : String(activeCount)} detail="Programaciones habilitadas" accent="blue" />
           <MetricCard icon="clock" label="Días programados" value={loading ? '—' : String(dayCount)} detail="Días diferentes de la semana" accent="gold" />
         </section>
+
+        {!isAdmin && <AttendanceCheckIn session={session} />}
 
         <section className="mt-8 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-[0_3px_16px_rgba(15,23,42,.025)]">
           <div className="flex flex-col justify-between gap-4 border-b border-slate-100 px-5 py-5 sm:flex-row sm:items-center sm:px-6">

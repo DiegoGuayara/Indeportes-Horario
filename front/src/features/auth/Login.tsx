@@ -33,7 +33,7 @@ export function Login({ onLogin }: { onLogin: (session: Session) => void }) {
       <div className="absolute inset-0 story-grid opacity-50" />
       <div className="relative z-10"><Brand inverse /></div>
       <div className="relative z-10 my-auto max-w-xl pb-14 pt-20">
-        <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[.06] px-3.5 py-2 text-xs font-medium text-slate-200">
+        <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/6 px-3.5 py-2 text-xs font-medium text-slate-200">
           <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_14px_#34d399]" /> Plataforma de gestión institucional
         </div>
         <h1 className="max-w-lg text-5xl font-semibold leading-[1.08] tracking-[-.045em] xl:text-[58px]">Tu jornada, <span className="text-emerald-300">en orden.</span></h1>
@@ -41,7 +41,7 @@ export function Login({ onLogin }: { onLogin: (session: Session) => void }) {
         <div className="mt-12 grid max-w-lg grid-cols-3 gap-3">
           {[
             ['01', 'Horarios claros'], ['02', 'Asistencia segura'], ['03', 'Gestión central'],
-          ].map(([number, label]) => <div key={number} className="rounded-xl border border-white/10 bg-white/[.045] p-4 backdrop-blur-sm">
+          ].map(([number, label]) => <div key={number} className="rounded-xl border border-white/10 bg-white/4.5 p-4 backdrop-blur-sm">
             <p className="text-[11px] font-bold tracking-[.12em] text-emerald-300">{number}</p><p className="mt-3 text-xs font-medium text-slate-100">{label}</p>
           </div>)}
         </div>
@@ -56,7 +56,7 @@ export function Login({ onLogin }: { onLogin: (session: Session) => void }) {
 
     <section className="flex min-h-screen flex-col px-6 py-6 sm:px-10 lg:px-14 xl:px-24">
       <div className="lg:hidden"><Brand /></div>
-      <div className="mx-auto flex w-full max-w-[420px] flex-1 flex-col justify-center py-14 lg:max-w-[390px]">
+      <div className="mx-auto flex w-full max-w-105 flex-1 flex-col justify-center py-14 lg:max-w-97.5">
         <div className="mb-8">
           <p className="text-xs font-bold uppercase tracking-[.18em] text-emerald-700">Bienvenida</p>
           <h2 className="mt-3 text-[34px] font-semibold leading-tight tracking-[-.04em] text-slate-900">Inicia sesión</h2>

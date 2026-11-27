@@ -3,14 +3,26 @@ import {
   AttendanceServiceError,
   getAdminAttendanceHistory,
   getAttendanceHistory,
+  issueAttendanceQr,
   registerAttendanceEvent,
 } from "./attendance.service.js";
+
+export const getCurrentQrCode: RequestHandler = async (_req, res) => {
+  try {
+    const auth = res.locals.auth as { userId: string };
+    const qr = await issueAttendanceQr(auth.userId);
+    res.status(200).json({ data: qr });
+  } catch (error) {
+    console.error("No se pudo generar el QR de asistencia:", error);
+    res.status(500).json({ message: "No se pudo generar el código QR." });
+  }
+};
 
 export const createAttendanceEvent: RequestHandler = async (req, res) => {
   try {
     const auth = res.locals.auth as { contractorId: string };
-    const event = await registerAttendanceEvent(req.body, auth.contractorId);
-    res.status(201).json({ data: event });
+    const result = await registerAttendanceEvent(req.body, auth.contractorId);
+    res.status(201).json({ data: result.event, location: result.location });
   } catch (error) {
     if (error instanceof AttendanceServiceError) {
       res.status(error.statusCode).json({ message: error.message });
