@@ -2,7 +2,7 @@ import type { RequestHandler } from "express";
 import { jwtVerify } from "jose";
 import { jwtAudience, jwtIssuer, jwtKey } from "../config/jwt.js";
 
-export type AuthRole = "ADMIN" | "CONTRACTOR";
+export type AuthRole = "ADMIN" | "CONTRACTOR" | "GUARD";
 
 export interface AuthContext {
   userId: string;
@@ -31,9 +31,9 @@ export const authenticate: RequestHandler = async (req, res, next) => {
 
     if (
       typeof payload.sub !== "string" ||
-      (role !== "ADMIN" && role !== "CONTRACTOR") ||
+      (role !== "ADMIN" && role !== "CONTRACTOR" && role !== "GUARD") ||
       (contractorId !== null && typeof contractorId !== "string") ||
-      (role === "ADMIN" && contractorId !== null) ||
+      ((role === "ADMIN" || role === "GUARD") && contractorId !== null) ||
       (role === "CONTRACTOR" && typeof contractorId !== "string")
     ) {
       res.status(401).json({ message: "El token no contiene una identidad válida." });

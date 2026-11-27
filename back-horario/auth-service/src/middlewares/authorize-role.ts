@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 
-type UserRole = "ADMIN" | "CONTRACTOR";
+type UserRole = "ADMIN" | "CONTRACTOR" | "GUARD";
 
 export const authorizeRole = (...allowedRoles: UserRole[]): RequestHandler =>
   (_req, res, next) => {

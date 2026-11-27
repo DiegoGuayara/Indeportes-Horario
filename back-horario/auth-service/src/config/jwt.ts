@@ -12,7 +12,7 @@ export const jwtAudience = "indeportes-api";
 
 interface TokenUser {
   id: string;
-  role: "ADMIN" | "CONTRACTOR";
+  role: "ADMIN" | "CONTRACTOR" | "GUARD";
   contractorId: string | null;
 }
 

@@ -10,7 +10,7 @@ const audience = process.env.JWT_AUDIENCE ?? "indeportes-api";
 
 export type AuthContext = {
   userId: string;
-  role: "ADMIN" | "CONTRACTOR";
+  role: "ADMIN" | "CONTRACTOR" | "GUARD";
   contractorId: string | null;
 };
 
@@ -31,9 +31,9 @@ export const authenticate: RequestHandler = async (req, res, next) => {
     const contractorId = payload.contractorId;
     if (
       typeof payload.sub !== "string" ||
-      (role !== "ADMIN" && role !== "CONTRACTOR") ||
+      (role !== "ADMIN" && role !== "CONTRACTOR" && role !== "GUARD") ||
       (contractorId !== null && typeof contractorId !== "string") ||
-      (role === "ADMIN" && contractorId !== null) ||
+      ((role === "ADMIN" || role === "GUARD") && contractorId !== null) ||
       (role === "CONTRACTOR" && typeof contractorId !== "string")
     ) {
       res.status(401).json({ message: "El token no contiene una identidad válida." });

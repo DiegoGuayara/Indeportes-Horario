@@ -29,3 +29,16 @@ export const createContractorUser = (data: {
       createdAt: true,
     },
   });
+
+export const createGuardUser = (data: { email: string; passwordHash: string }) =>
+  prisma.user.create({
+    data: { ...data, role: "GUARD", contractorId: null },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      contractorId: true,
+      isActive: true,
+      createdAt: true,
+    },
+  });
